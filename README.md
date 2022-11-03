@@ -14,7 +14,7 @@ poetry install
 ```
 - Then, run the program with
 ```
-poetry run python3 -m influxbenchmarker
+poetry run python3 -m influxbenchmarker <SERVER_NAME> <SERVER_PORT> <USERNAME> <PASSWORD> <DATABASE>
 ```
 
 ## Contributing
