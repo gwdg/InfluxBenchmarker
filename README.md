@@ -21,6 +21,10 @@ poetry run python3 -m influxbenchmarker
 
 Feel free to contribute, please open a issue first.
 
+### Run local dev setup with docker compose
+
+See [here](./docker-influx-grafana/README.md)
+
 ### Run CI locally
 Again, first build the local environment with
 ```
