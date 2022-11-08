@@ -1,23 +1,25 @@
 # TODO: CLI PARSER
 import argparse
-import sys
+import random
 
 from dataclasses import dataclass
+from datetime import datetime
 from influxdb import InfluxDBClient
 
-HOST = ""
-PORT = 8086
-USERNAME = "grafana"
-PASSWORD = "grafana"
-DATABASE = "mydb"
+MEASUREMENT_NAME: str = "influxbenchmark"
 
 @dataclass
 class CLI:
+    DEFAULT_TAG_NUMBER = 1
+    DEFAULT_FIELD_NUMBER = 1
+
     host: str
     port: int
     username: str
     password: str
     database: str
+    tag_number: int = DEFAULT_TAG_NUMBER
+    field_number: int = DEFAULT_FIELD_NUMBER
 
     @classmethod
     def parse_from_cli(cls):
@@ -31,25 +33,41 @@ class CLI:
         parser.add_argument("USERNAME", help="The username to authenticate against the influxdb.")
         parser.add_argument("PASSWORD", help="The password to authenticate against the influxdb.")
         parser.add_argument("DATABASE", help="The database to write the data to.")
+        parser.add_argument("-t", "--tag-number", type=int, help="The number of tags sent per node", default=CLI.DEFAULT_TAG_NUMBER)
+        parser.add_argument("-f", "--field-number", type=int, help="The number of fields sent per node", default=CLI.DEFAULT_FIELD_NUMBER)
+        # TODO: Number of thingies send
+        # TODO: FREQUENCY
         args = parser.parse_args()
-        return cls(args.HOST, int(args.PORT), args.USERNAME, args.PASSWORD, args.DATABASE)
+        return cls(
+            host=args.HOST,
+            port=int(args.PORT),
+            username=args.USERNAME,
+            password=args.PASSWORD,
+            database=args.DATABASE,
+            tag_number = args.tag_number,
+            field_number = args.field_number
+        )
 
+def build_json_measurement(tag_number, field_number, min_val = 0, max_val = 1):
+    return {
+            "measurement": MEASUREMENT_NAME,
+            "tags": {f"tag_{i}": f"value_{i}" for i in range(tag_number)},
+            "time": datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'),
+            "fields": {f"field_{i}": random.uniform(min_val, max_val) for i in range(field_number)},
+    }
 
 def main():
     cli = CLI.parse_from_cli()
-    print(f"{cli=}")
-    ...
-    json_body = [
-        {
-            "measurement": "cpu_load_short",
-            "tags": {"host": "server01", "region": "us-west"},
-            "time": "2009-11-10T23:00:00Z",
-            "fields": {"value": 1.2},
-        }
-    ]
-    client = InfluxDBClient(cli.host, cli.port, cli.username, cli.password, cli.database)
-    client.write_points(json_body)
-    result = client.query("select value from cpu_load_short;")
+    client = InfluxDBClient(
+        host=cli.host,
+        port=cli.port,
+        username=cli.username,
+        password=cli.password,
+        database=cli.database
+    )
+    json_body = build_json_measurement(cli.tag_number, cli.field_number)
+    client.write_points([json_body])
+    result = client.query(f"select field_0 from {MEASUREMENT_NAME};")
     print(f"{result=}")
 
 
