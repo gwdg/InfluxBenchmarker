@@ -1,6 +1,6 @@
-# TODO: CLI PARSER
 import argparse
 import random
+import time
 
 from dataclasses import dataclass
 from datetime import datetime
@@ -79,11 +79,13 @@ def main():
         database=cli.database
     )
     json_body = build_json_measurement(cli.tag_number, cli.field_number)
-    client.write_points([json_body])
+    while True:
+        print(f"Sending {json_body}")
+        client.write_points([json_body])
+        print("Data sent.")
+        time.sleep(1)
 
-    # everything below here is just debug
-    result = client.query(f"select field_0 from {MEASUREMENT_NAME};")
-    print(f"{result=}")
+
 
 
 if __name__ == "__main__":
