@@ -78,8 +78,8 @@ def main():
         password=cli.password,
         database=cli.database
     )
-    json_body = build_json_measurement(cli.tag_number, cli.field_number)
     while True:
+        json_body = build_json_measurement(cli.tag_number, cli.field_number)
         print(f"Sending {json_body}")
         client.write_points([json_body])
         print("Data sent.")
