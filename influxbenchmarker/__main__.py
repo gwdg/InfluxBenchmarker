@@ -52,7 +52,7 @@ class CLI:
         )
         parser.add_argument(
             "-i",
-            "--sending interval",
+            "--sending-interval",
             type=int,
             help="The sending frequency",
             default=CLI.DEFAULT_SENDING_INTERVAL
