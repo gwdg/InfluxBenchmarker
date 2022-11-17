@@ -14,6 +14,7 @@ class CLI:
     DEFAULT_TAG_NUMBER = 1
     DEFAULT_FIELD_NUMBER = 1
     DEFAULT_SENDING_INTERVAL = 1
+    DEFAULT_JSON_OBJECTS = 1
 
     host: str
     port: int
@@ -57,6 +58,15 @@ class CLI:
             help="The sending frequency",
             default=CLI.DEFAULT_SENDING_INTERVAL
         )
+        parser.add_argument(
+            "-j",
+            "--json-objects",
+            type=int,
+            help="The number og json objects sent",
+            default=CLI.DEFAULT_JSON_OBJECTS
+        )
+
+
         args = parser.parse_args()
         return cls(
             host=args.HOST,
@@ -66,7 +76,8 @@ class CLI:
             database=args.DATABASE,
             tag_number=args.tag_number,
             field_number=args.field_number,
-            sending_interval=args.sending_interval
+            sending_interval=args.sending_interval,
+            json_objects=args.json_objects
         )
 
 
