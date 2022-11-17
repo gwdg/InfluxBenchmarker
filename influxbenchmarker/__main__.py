@@ -13,6 +13,7 @@ MEASUREMENT_NAME: str = "influxbenchmark"
 class CLI:
     DEFAULT_TAG_NUMBER = 1
     DEFAULT_FIELD_NUMBER = 1
+    DEFAULT_SENDING_INTERVAL = 1
 
     host: str
     port: int
@@ -21,6 +22,7 @@ class CLI:
     database: str
     tag_number: int = DEFAULT_TAG_NUMBER
     field_number: int = DEFAULT_FIELD_NUMBER
+    sending_interval: int = DEFAULT_SENDING_INTERVAL
 
     @classmethod
     def parse_from_cli(cls):
@@ -48,6 +50,13 @@ class CLI:
             help="The number of fields sent per node",
             default=CLI.DEFAULT_FIELD_NUMBER
         )
+        parser.add_argument(
+            "-i",
+            "--sending interval",
+            type=int,
+            help="The sending frequency",
+            default=CLI.DEFAULT_SENDING_INTERVAL
+        )
         args = parser.parse_args()
         return cls(
             host=args.HOST,
@@ -56,7 +65,8 @@ class CLI:
             password=args.PASSWORD,
             database=args.DATABASE,
             tag_number=args.tag_number,
-            field_number=args.field_number
+            field_number=args.field_number,
+            sending_interval=args.sending_interval
         )
 
 
@@ -83,7 +93,7 @@ def main():
         print(f"Sending {json_body}")
         client.write_points([json_body])
         print("Data sent.")
-        time.sleep(1)
+        time.sleep(cli.sending_interval)
 
 
 
