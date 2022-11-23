@@ -62,7 +62,7 @@ class CLI:
             "-j",
             "--json-objects",
             type=int,
-            help="The number og json objects sent",
+            help="The number of json objects sent",
             default=CLI.DEFAULT_JSON_OBJECTS
         )
 
