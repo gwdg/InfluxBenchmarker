@@ -24,6 +24,7 @@ class CLI:
     tag_number: int = DEFAULT_TAG_NUMBER
     field_number: int = DEFAULT_FIELD_NUMBER
     sending_interval: int = DEFAULT_SENDING_INTERVAL
+    json_objects: int = DEFAULT_JSON_OBJECTS
 
     @classmethod
     def parse_from_cli(cls):
@@ -100,11 +101,12 @@ def main():
         database=cli.database
     )
     while True:
-        json_body = build_json_measurement(cli.tag_number, cli.field_number)
-        print(f"Sending {json_body}")
-        client.write_points([json_body])
-        print("Data sent.")
-        time.sleep(cli.sending_interval)
+        for i in range(cli.json_objects):
+            json_body = build_json_measurement(cli.tag_number, cli.field_number)
+            print(f"Sending {json_body}")
+            client.write_points([json_body])
+            print("Data sent.")
+            time.sleep(cli.sending_interval)
 
 
 
