@@ -100,7 +100,7 @@ def main():
         password=cli.password,
         database=cli.database
     )
-    # Not sure about the foor lopp for wrtiting multiple json objects 
+
     while True:
         for i in range(cli.json_objects):
             json_body = build_json_measurement(cli.tag_number, cli.field_number)
