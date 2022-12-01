@@ -105,9 +105,9 @@ def main():
         for i in range(cli.json_objects):
             json_body = build_json_measurement(cli.tag_number, cli.field_number)
             print(f"Sending {json_body}")
-            client.write_points([json_body])
-            print("Data sent.")
-            time.sleep(cli.sending_interval)
+        client.write_points([json_body])
+        print("Data sent.")
+        time.sleep(cli.sending_interval)
 
 
 
