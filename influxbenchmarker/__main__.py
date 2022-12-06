@@ -107,7 +107,7 @@ def main():
             print(f"Sending {json_body}")
             client.write_points([json_body])
             print("Data sent.")
-        time.sleep(cli.sending_interval)
+            time.sleep(cli.sending_interval)
 
 
 
